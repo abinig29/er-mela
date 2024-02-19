@@ -1,0 +1,2 @@
+scrapy>=2.5.0
+python-dotenv>=0.19.1
