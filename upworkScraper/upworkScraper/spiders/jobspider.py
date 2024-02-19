@@ -7,7 +7,7 @@ from upworkScraper.items import UpworkscraperItem
 class JobspiderSpider(scrapy.Spider):
     name = "jobspider"
     allowed_domains = ["www.upwork.com"]
-    start_urls = ["https://www.upwork.com/ab/feed/jobs/rss?paging=0%3B10&q=vue.js&sort=recency&api_params=1&securityToken=1a38db0c96c7fed1aabe935fb15bc12cc9c64d870ebbbead57f39c1cd15de32ef481fece6bcf77918c40b09895d0cedf03997b64fb415869b6748d0b59bb7a56&userUid=1320200307452182528&orgUid=1320200307456376833"]
+    start_urls = ["https://www.upwork.com/ab/feed/jobs/rss?paging=0%3B10&q=%28Python+OR+Vue.js+OR+React+OR+Native+OR+Django+OR+Next.js+OR+Svelte+OR+React+OR+Graphics+OR+Design+OR+Photo+OR+Editing+OR+Illustration%29&sort=recency&api_params=1&securityToken=c5466a33f0980fa4088031b92938f873985c27e062ab271ef6916b1274ed84bbee5ae845326f092c57e4681c4d36c0fa6ca4ad890f0f4c13795908ce2b03ad48&userUid=1385588801216208896&orgUid=1385588801220403200"]
 
     def parse(self, response):
         today = datetime.now().strftime("%B %d, %Y")
