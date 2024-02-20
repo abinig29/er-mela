@@ -23,7 +23,7 @@ NEWSPIDER_MODULE = "upworkScraper.spiders"
 #USER_AGENT = "upworkScraper (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -31,10 +31,10 @@ ROBOTSTXT_OBEY = True
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 10
 # The download delay setting will honor only one of:
-#CONCURRENT_REQUESTS_PER_DOMAIN = 16
-#CONCURRENT_REQUESTS_PER_IP = 16
+CONCURRENT_REQUESTS_PER_DOMAIN = 16
+CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
@@ -53,6 +53,28 @@ ROBOTSTXT_OBEY = True
 #SPIDER_MIDDLEWARES = {
 #    "upworkScraper.middlewares.UpworkscraperSpiderMiddleware": 543,
 #}
+
+
+
+
+# SCRAPEOPS_API_KEY = 'fdf116fd-d797-42eb-85a0-3f8b423dcb50'
+# SCRAPEOPS_PROXY_ENABLED = True
+# SCRAPEOPS_PROXY_SETTINGS = {'country': 'us'}
+
+# DOWNLOADER_MIDDLEWARES = {
+#     'scrapeops_scrapy_proxy_sdk.scrapeops_scrapy_proxy_sdk.ScrapeOpsScrapyProxySdk': 725,
+# }
+
+
+
+
+
+
+
+## settings.py
+
+USER_AGENT = 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
@@ -100,12 +122,12 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
-# TELEGRAM_BOT_TOKEN=os.getenv("TELEGRAM_BOT_TOKEN")
-# TELEGRAM_CHAT_ID=os.getenv("TELEGRAM_CHAT_ID")
 
 
-# TELEGRAM_BOT_TOKEN="6490290819:AAGByyb8mmlk9LGiNgST6UhQcwJ6ZKo53E0"
-# TELEGRAM_CHAT_ID="-4083061991"
 
-TELEGRAM_BOT_TOKEN="6403712356:AAH9IVCcC9yx_8zxranBO5mkFj2FjPHPD64"
-TELEGRAM_CHAT_ID="-1002142322823"
+# TELEGRAM_BOT_TOKEN="6403712356:AAH9IVCcC9yx_8zxranBO5mkFj2FjPHPD64"
+# TELEGRAM_CHAT_ID="-1002142322823"
+
+
+TELEGRAM_BOT_TOKEN="6984724104:AAE-Cm951PbzIsOePu2gRPEmlzJR_SmlBiM"
+TELEGRAM_CHAT_ID="-1001514739808"

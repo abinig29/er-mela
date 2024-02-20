@@ -7,7 +7,12 @@ from upworkScraper.items import UpworkscraperItem
 class JobspiderSpider(scrapy.Spider):
     name = "jobspider"
     allowed_domains = ["www.upwork.com"]
-    start_urls = ["https://www.upwork.com/ab/feed/jobs/rss?paging=0%3B10&q=%28Python+OR+Vue.js+OR+React+OR+Native+OR+Django+OR+Next.js+OR+Svelte+OR+React%29&sort=recency&api_params=1&securityToken=c5466a33f0980fa4088031b92938f873985c27e062ab271ef6916b1274ed84bbee5ae845326f092c57e4681c4d36c0fa6ca4ad890f0f4c13795908ce2b03ad48&userUid=1385588801216208896&orgUid=1385588801220403200"]
+    start_urls = [
+        "https://www.upwork.com/ab/feed/jobs/rss?ontology_skill_uid=1031626773660942336%2C1031626762688643072&paging=0%3B10&sort=recency&api_params=1&q=&securityToken=9486e3bc68cbb239328ea1917a911054700a67392a73e0384215274909fa51a425154c7e4cf4595fd96346df74110c1d9a0209ba52e1aa391467221423aad252&userUid=1643447806046261248&orgUid=1643447806046261249",
+        "https://www.upwork.com/ab/feed/jobs/rss?ontology_skill_uid=996364628012691466&paging=0%3B10&sort=recency&api_params=1&q=&securityToken=9486e3bc68cbb239328ea1917a911054700a67392a73e0384215274909fa51a425154c7e4cf4595fd96346df74110c1d9a0209ba52e1aa391467221423aad252&userUid=1643447806046261248&orgUid=1643447806046261249",
+        "https://www.upwork.com/ab/feed/jobs/rss?ontology_skill_uid=996364628025274386%2C1031626732309299200&paging=0%3B10&sort=recency&api_params=1&q=&securityToken=9486e3bc68cbb239328ea1917a911054700a67392a73e0384215274909fa51a425154c7e4cf4595fd96346df74110c1d9a0209ba52e1aa391467221423aad252&userUid=1643447806046261248&orgUid=1643447806046261249",
+        "https://www.upwork.com/ab/feed/jobs/rss?ontology_skill_uid=1504884980376928256&paging=0%3B10&sort=recency&api_params=1&q=&securityToken=9486e3bc68cbb239328ea1917a911054700a67392a73e0384215274909fa51a425154c7e4cf4595fd96346df74110c1d9a0209ba52e1aa391467221423aad252&userUid=1643447806046261248&orgUid=1643447806046261249"
+        ]
 
     def parse(self, response):
         today = datetime.now().strftime("%B %d, %Y")
@@ -28,6 +33,12 @@ class JobspiderSpider(scrapy.Spider):
                 job_item["category"]  = self.extract_category(description)
                 job_item["fixed"]  = self.extract_budget(description)
                 job_item["range"]  = self.extract_hourly_range(description)
+                
+                job_item['job_listed'] = None
+                job_item['company_name'] = None
+                job_item['company_link'] = None
+                job_item['company_location'] = None
+                job_item['sourse']='U'
                 yield job_item
     def extract_hourly_range(self, description):
         if description:
