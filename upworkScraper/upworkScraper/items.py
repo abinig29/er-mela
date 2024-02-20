@@ -8,10 +8,10 @@ class UpworkscraperItem(scrapy.Item):
     skills=scrapy.Field()
     fixed=scrapy.Field()
     range=scrapy.Field()
-    job_listed=scrapy.Field()
     company_name=scrapy.Field()
     company_link=scrapy.Field()
     company_location=scrapy.Field()
     sourse=scrapy.Field()
+    img=scrapy.Field()
 
 

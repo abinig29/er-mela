@@ -46,7 +46,8 @@ class SqlitePipeline:
             company_name TEXT,
             company_link TEXT,
             company_location TEXT,
-            sourse TEXT
+            sourse TEXT,
+            img TEXT
             
         )
         """)
@@ -63,10 +64,11 @@ class SqlitePipeline:
         skills = adapter.get("skills")
         price_range = adapter.get("range")
         fixed_price = adapter.get("fixed")
-        job_listed=adapter.get("job_listed")
         company_name=adapter.get("company_name")
         company_link=adapter.get("company_link")
         company_location=adapter.get("company_location")
+        img=adapter.get("img")
+        
         sourse=adapter.get("sourse")
 
         if None in (title, link, description, posted_on, category):
@@ -78,7 +80,7 @@ class SqlitePipeline:
      
         else:
             self.cur.execute("""
-                INSERT INTO jobs (title, link, description, postedOn, category,skills,fixed,range,job_listed,company_name,company_link,company_location,sourse) VALUES (?, ?, ?, ?, ?,?,?,?,?,?,?,?,?)
+                INSERT INTO jobs (title, link, description, postedOn, category,skills,fixed,range,company_name,company_link,company_location,sourse,img) VALUES (?, ?, ?, ?, ?,?,?,?,?,?,?,?,?)
             """,
             (
                 title,
@@ -89,22 +91,24 @@ class SqlitePipeline:
                 str(skills), 
                 fixed_price,
                 price_range,
-                job_listed,
                 company_name,
                 company_link,
                 company_location,
-                sourse
+                sourse,
+                img
                  
             ))
             self.con.commit()
             if sourse=='U':
              self.send_telegram_upwork_notification(title,link,skills,posted_on,price_range,fixed_price,spider)
             else:
-             self.send_telegram_linkedin_notification( title, link,job_listed,company_name,company_link,company_location,spider)
+             self.send_telegram_linkedin_notification( title, link,company_name,company_link,company_location,img,posted_on,spider)
                 
         return item
     def send_telegram_upwork_notification(self, title, link,skills,posted_on,range,fixed,spider):
-        message = f"New Upwork Job:\nTitle: {title}\nLink: {link}\nSkills:\t"
+        message = f"<b>New Upwork Job:</b>\n"
+        message += f"<b>Title:</b> {title}\n"
+        message += f"<b>Link:</b> <a href='{link}'>Job Link</a>\nSkills:\t"
         for skill in skills:
          message += f'#{skill.replace(" ", "_")}\t\t\t'
         message += f"\nPosted on: {posted_on[0]}"
@@ -115,26 +119,40 @@ class SqlitePipeline:
         url = f"https://api.telegram.org/bot{self.bot_token}/sendMessage"
         data = {
             "chat_id": self.chat_id,
-            "text": message
+            "text": message,
+            "parse_mode": "HTML"  
+            
         }
         response = requests.post(url, data=data)
-        print('repsose form telegam sir',response.text)
+        
         if response.status_code != 200:
             spider.logger.error(f"Failed to send Telegram notification: {response.text}")
-    def send_telegram_linkedin_notification(self, title, link,job_listed,company_name,company_link,company_location,spider):
-        message = f"New Linkedin Job:\nTitle: {title}\nLink: {link}\n"
-        message += f"\nPosted on: {job_listed}"
+    def send_telegram_linkedin_notification(self, title, link,company_name,company_link,company_location,img,posted_on,spider):
+        message = f"<b>New LinkedIn Job:</b>\n"
+        message += f"<b>Title:</b> {title}\n"
+        message += f"<b>Link:</b> <a href='{link}'>Job Link</a>\n"
+        message += f"<b>Posted on:</b> {posted_on}\n"
         if company_name:
-         message += f"\nCompany Name: {company_name}"
+            message += f"<b>Company Name:</b> {company_name}\n"
         if company_link:
-         message += f"\nCompany Link: {company_link}"
-        if company_link:
-         message += f"\nCompany Location: {company_location}"
+            message += f"<b>Company Link:</b> <a href='{company_link}'>Company Link</a>\n"
+        if company_location:
+            message += f"<b>Company Location:</b> {company_location}\n"
+        if img:
+         message += f"<img src='{img}' width='100' height='100'>\n"
+
         url = f"https://api.telegram.org/bot{self.bot_token}/sendMessage"
+
         data = {
             "chat_id": self.chat_id,
-            "text": message
+            "text": message,
+            "parse_mode": "HTML"  
         }
+        if img:
+         data["photo"] = img
+         
+        url = f"https://api.telegram.org/bot{self.bot_token}/sendMessage"
+       
         response = requests.post(url, data=data)
         if response.status_code != 200:
             spider.logger.error(f"Failed to send Telegram notification: {response.text}")

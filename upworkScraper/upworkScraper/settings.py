@@ -31,7 +31,7 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 10
+DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
 CONCURRENT_REQUESTS_PER_DOMAIN = 16
 CONCURRENT_REQUESTS_PER_IP = 16
@@ -58,12 +58,7 @@ CONCURRENT_REQUESTS_PER_IP = 16
 
 
 # SCRAPEOPS_API_KEY = 'fdf116fd-d797-42eb-85a0-3f8b423dcb50'
-# SCRAPEOPS_PROXY_ENABLED = True
-# SCRAPEOPS_PROXY_SETTINGS = {'country': 'us'}
 
-# DOWNLOADER_MIDDLEWARES = {
-#     'scrapeops_scrapy_proxy_sdk.scrapeops_scrapy_proxy_sdk.ScrapeOpsScrapyProxySdk': 725,
-# }
 
 
 
@@ -73,7 +68,7 @@ CONCURRENT_REQUESTS_PER_IP = 16
 
 ## settings.py
 
-USER_AGENT = 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+# USER_AGENT = 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
 
 
 # Enable or disable downloader middlewares
@@ -123,11 +118,10 @@ TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
 
+# test linkedin
+# TELEGRAM_BOT_TOKEN="6984724104:AAE-Cm951PbzIsOePu2gRPEmlzJR_SmlBiM"
+# TELEGRAM_CHAT_ID="-1001514739808"
 
 
-# TELEGRAM_BOT_TOKEN="6403712356:AAH9IVCcC9yx_8zxranBO5mkFj2FjPHPD64"
-# TELEGRAM_CHAT_ID="-1002142322823"
-
-
-TELEGRAM_BOT_TOKEN="6984724104:AAE-Cm951PbzIsOePu2gRPEmlzJR_SmlBiM"
-TELEGRAM_CHAT_ID="-1001514739808"
+TELEGRAM_BOT_TOKEN="6403712356:AAH9IVCcC9yx_8zxranBO5mkFj2FjPHPD64"
+TELEGRAM_CHAT_ID="-1002142322823"

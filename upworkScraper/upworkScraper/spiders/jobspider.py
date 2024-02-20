@@ -34,7 +34,7 @@ class JobspiderSpider(scrapy.Spider):
                 job_item["fixed"]  = self.extract_budget(description)
                 job_item["range"]  = self.extract_hourly_range(description)
                 
-                job_item['job_listed'] = None
+                job_item['img'] = None
                 job_item['company_name'] = None
                 job_item['company_link'] = None
                 job_item['company_location'] = None
