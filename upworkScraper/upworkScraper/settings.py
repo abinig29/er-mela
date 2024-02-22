@@ -87,7 +87,7 @@ CONCURRENT_REQUESTS_PER_IP = 16
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    "upworkScraper.pipelines.CleanDescriptionPipeline": 300,
-   "upworkScraper.pipelines.SqlitePipeline": 400,
+   "upworkScraper.pipelines.PostgresPipeline": 400,
 
 }
 

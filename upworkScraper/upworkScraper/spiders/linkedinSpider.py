@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import scrapy
 from upworkScraper.items import UpworkscraperItem
 from fake_useragent import UserAgent
@@ -23,12 +23,12 @@ class JobspiderSpider(scrapy.Spider):
         first_job_on_page=response.meta['first_job_on_page']
         jobs = response.css("li")
         num_jobs_returned = len(jobs)
-        
+        today_date = datetime.now().date()
+        start_of_week = today_date - timedelta(days=today_date.weekday())
+        end_of_week = start_of_week + timedelta(days=6)
         for job in jobs:
             posted_on_date = datetime.strptime(job.xpath('//time/@datetime').extract_first(), "%Y-%m-%d").date()
-            today_date = datetime.now().date()
-            print(today_date,posted_on_date)
-            if posted_on_date == today_date:    
+            if start_of_week <= posted_on_date <= end_of_week:    
                 job_item=UpworkscraperItem()
                 job_item['title'] = job.css("h3::text").get(default='not-found').strip()
                 job_item['link'] = job.css(".base-card__full-link::attr(href)").get(default='not-found').strip()
@@ -47,7 +47,7 @@ class JobspiderSpider(scrapy.Spider):
             else: continue
         if num_jobs_returned >= 50:
             print("50============== done")
-        # elif num_jobs_returned > 0:
-        #     first_job_on_page = int(first_job_on_page) + 25
-        #     next_url = self.api_url + str(first_job_on_page)
-        #     yield scrapy.Request(url=next_url, callback=self.parse_job, meta={'first_job_on_page': first_job_on_page})
+        elif num_jobs_returned > 0:
+            first_job_on_page = int(first_job_on_page) + 25
+            next_url = self.api_url + str(first_job_on_page)
+            yield scrapy.Request(url=next_url, callback=self.parse_job, meta={'first_job_on_page': first_job_on_page})

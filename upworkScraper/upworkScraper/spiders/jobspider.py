@@ -30,7 +30,7 @@ class JobspiderSpider(scrapy.Spider):
                 job_item["description"]=description.strip() if description else None
                 job_item["skills"]  = self.extract_skills(description)    
                 job_item["posted_on"] = posted_date_to_comaper,
-                job_item["category"]  = self.extract_category(description)
+                job_item["category"]  = self.extract_category(description)[0]
                 job_item["fixed"]  = self.extract_budget(description)
                 job_item["range"]  = self.extract_hourly_range(description)
                 

@@ -1,6 +1,5 @@
-
+import psycopg2
 from itemadapter import ItemAdapter
-import sqlite3
 import re
 import requests
 class CleanDescriptionPipeline:
@@ -19,7 +18,7 @@ class CleanDescriptionPipeline:
                  adapter['description'] =  description.strip()
         return item
 
-class SqlitePipeline:
+class PostgresPipeline:
     @classmethod
     def from_crawler(cls, crawler):
         settings = crawler.settings
@@ -29,76 +28,103 @@ class SqlitePipeline:
     def __init__(self,bot_token,chat_id):
         self.bot_token = bot_token
         self.chat_id = chat_id
-        self.con = sqlite3.connect('jobs.db')
-        self.cur = self.con.cursor()
+        user="postgres.iptfrrlntgemcmsqvhwf" 
+        password="tataTATA123123HER"
+        host="aws-0-us-west-1.pooler.supabase.com" 
+        port=5432 
+        dbname="postgres"
+        
+        
+        self.connection = psycopg2.connect(host=host, user=user, password=password, dbname=dbname)
+        self.cur = self.connection.cursor()
+       
         self.cur.execute("""
-        CREATE TABLE IF NOT EXISTS jobs(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT,
-            link TEXT,
-            description TEXT,
-            postedOn TEXT,
-            category TEXT,
-            skills TEXT,
-            fixed TEXT,
-            range TEXT,
-            job_listed TEXT,
-            company_name TEXT,
-            company_link TEXT,
-            company_location TEXT,
-            sourse TEXT,
-            img TEXT
-            
-        )
+       CREATE TABLE IF NOT EXISTS "Job" (
+        id SERIAL PRIMARY KEY,
+        title TEXT,
+        link VARCHAR(255),
+        description TEXT,
+        postedOn TIMESTAMP,
+        category VARCHAR(255),
+        skills TEXT[], 
+        fixed VARCHAR(255),
+        range VARCHAR(255),
+        companyName VARCHAR(255),
+        companyLink VARCHAR(255),
+        companyLocation VARCHAR(255),
+        source VARCHAR(255),
+        img  VARCHAR(255),
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) 
         """)
-
-    
-    
+        self.connection.commit()
+        
+      
+        
+        
+        
+        
+        
     def process_item(self, item, spider):
         adapter = ItemAdapter(item)
         title = adapter.get("title")
         link = adapter.get("link")
         description = adapter.get("description")
         posted_on = adapter.get("posted_on")
-        category = adapter.get("category")
+        category =adapter.get("category") 
         skills = adapter.get("skills")
         price_range = adapter.get("range")
         fixed_price = adapter.get("fixed")
-        company_name=adapter.get("company_name")
         company_link=adapter.get("company_link")
+        company_name=adapter.get("company_name")
         company_location=adapter.get("company_location")
         img=adapter.get("img")
-        
         sourse=adapter.get("sourse")
-
+        
+        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+        print(category)
+        print(self.cur)
         if None in (title, link, description, posted_on, category):
          spider.logger.warning("One or more required fields are None: %s", item)
-        self.cur.execute("select * from jobs where title = ?", (adapter.get("title"),))
-        result = self.cur.fetchone()
+        result=None
+        try:
+            self.cur.execute('SELECT * FROM public."Job" WHERE title = %s', (title,))
+            result = self.cur.fetchone()
+        except Exception as e:
+                # Print the error message
+                print("Error occurred:", e)
+        print("result",result)
         if result:
             spider.logger.warn("Item already in database: ")
-     
+        
         else:
-            self.cur.execute("""
-                INSERT INTO jobs (title, link, description, postedOn, category,skills,fixed,range,company_name,company_link,company_location,sourse,img) VALUES (?, ?, ?, ?, ?,?,?,?,?,?,?,?,?)
-            """,
-            (
-                title,
-                link,
-                description,
-                str(posted_on),
-                str(category),
-                str(skills), 
-                fixed_price,
-                price_range,
-                company_name,
-                company_link,
-                company_location,
-                sourse,
-                img
-                 
-            ))
-            self.con.commit()
+            try:
+                self.cur.execute("""
+                    INSERT INTO "Job" (title, link, description, "postedOn", category, skills, fixed, range, "companyName", "companyLink", "companyLocation", source, img) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (
+                    title,
+                    link,
+                    description,
+                    posted_on,
+                    category,
+                    skills,  # Pass the Python list directly
+                    fixed_price,
+                    price_range,
+                    company_name,
+                    company_link,
+                    company_location,
+                    sourse,
+                    img
+                ))
+                self.connection.commit()
+            except Exception as e:
+                # Print the error message
+                print("Error occurred:", e)
+                # Rollback the transaction if there's an error
+                self.connection.rollback()
+
             if sourse=='U':
              self.send_telegram_upwork_notification(title,link,skills,posted_on,price_range,fixed_price,spider)
             else:
@@ -159,4 +185,5 @@ class SqlitePipeline:
             
             
     def close_spider(self, spider):
-        self.con.close()
+        self.cur.close()
+        self.connection.close()
