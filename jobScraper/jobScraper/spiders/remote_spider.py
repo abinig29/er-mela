@@ -5,14 +5,14 @@ from jobScraper.items import JobScraperItem
 
 
 class RemoteSpider(scrapy.Spider):
-    name = "remote"
+    name = "remoteSpider"
     allowed_domains = ["remote.co"]
     current_page = 1
     number_of_pages = 1
     urls = [
         "https://remote.co/remote-jobs/developer/page/",
         "https://remote.co/remote-jobs/design/page/",
-        "https://remote.co/remote-jobs/it/",
+        "https://remote.co/remote-jobs/it/page/",
     ]
     api_url = urls[0]
 

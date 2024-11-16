@@ -82,9 +82,6 @@ class PostgresPipeline:
         img = adapter.get("img")
         sourse = adapter.get("sourse")
 
-        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-        print(category)
-        print(self.cur)
         if None in (title, link, description, posted_on, category):
             spider.logger.warning("One or more required fields are None: %s", item)
         result = None
@@ -92,9 +89,7 @@ class PostgresPipeline:
             self.cur.execute('SELECT * FROM public."Job" WHERE title = %s', (title,))
             result = self.cur.fetchone()
         except Exception as e:
-            # Print the error message
             print("Error occurred:", e)
-        print("result", result)
         if result:
             spider.logger.warn("Item already in database: ")
 
@@ -111,7 +106,7 @@ class PostgresPipeline:
                         description,
                         posted_on,
                         category,
-                        skills,  # Pass the Python list directly
+                        skills,  
                         fixed_price,
                         price_range,
                         company_name,
@@ -123,26 +118,23 @@ class PostgresPipeline:
                 )
                 self.connection.commit()
             except Exception as e:
-                # Print the error message
-                print("Error occurred:", e)
-                # Rollback the transaction if there's an error
                 self.connection.rollback()
 
-            if sourse == "U":
-                self.send_telegram_upwork_notification(
-                    title, link, skills, posted_on, price_range, fixed_price, spider
-                )
-            else:
-                self.send_telegram_linkedin_notification(
-                    title,
-                    link,
-                    company_name,
-                    company_link,
-                    company_location,
-                    img,
-                    posted_on,
-                    spider,
-                )
+            # if sourse == "U":
+            #     self.send_telegram_upwork_notification(
+            #         title, link, skills, posted_on, price_range, fixed_price, spider
+            #     )
+            # else:
+            #     self.send_telegram_linkedin_notification(
+            #         title,
+            #         link,
+            #         company_name,
+            #         company_link,
+            #         company_location,
+            #         img,
+            #         posted_on,
+            #         spider,
+            #     )
 
         return item
 

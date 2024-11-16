@@ -61,6 +61,9 @@ SCRAPEOPS_NUM_RESULTS = 5
 # }
 
 
+RETRY_TIMES = 3
+RETRY_DELAY = 5
+RETRY_HTTP_CODES = [500, 502, 503, 504, 408]  
 
 
 
@@ -80,7 +83,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
 EXTENSIONS = {
     #    "scrapy.extensions.telnet.TelnetConsole": None,
-    # "scrapeops_scrapy.extension.ScrapeOpsMonitor": 500,
+    "scrapeops_scrapy.extension.ScrapeOpsMonitor": 500,
 }
 
 # Configure item pipelines
@@ -117,9 +120,6 @@ TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
 
-# test linkedin
-# TELEGRAM_BOT_TOKEN="6984724104:AAE-Cm951PbzIsOePu2gRPEmlzJR_SmlBiM"
-# TELEGRAM_CHAT_ID="-1001514739808"
 
 
 TELEGRAM_BOT_TOKEN = "6403712356:AAH9IVCcC9yx_8zxranBO5mkFj2FjPHPD64"
