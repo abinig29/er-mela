@@ -6,6 +6,7 @@ from fake_useragent import UserAgent
 
 class LinkedinSpider(scrapy.Spider):
     name = "linkedinSpider"
+    
     allowed_domains = ["www.linkedin.com"]
     ua = UserAgent()
     user_agent = ua.random
