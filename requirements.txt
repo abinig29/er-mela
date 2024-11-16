@@ -1,4 +1,0 @@
-scrapy>=2.5.0
-python-dotenv>=0.19.1
-fake-useragent>=0.1.11
-psycopg2-binary>=2.9.1
